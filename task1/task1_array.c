@@ -188,7 +188,7 @@ bool_t seq_array_delete(seq_array_t *p_seq_array, int index)
 
     if ((index < p_seq_array->pos) && (index >= 0))
     {
-        for (i = index; i < p_seq_array->pos; i++)
+        for (i = index; i < p_seq_array->pos-1; i++)
             p_seq_array->p[i] = p_seq_array->p[i + 1];
 
         p_seq_array->p[--p_seq_array->pos] = 0;
