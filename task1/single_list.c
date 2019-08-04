@@ -80,8 +80,38 @@ single_list_t *single_list_delete(single_list_head_t *head, single_list_t **elem
 
     //printf("the value to be deleted is %08x:%d \r\n", (int)tmp, tmp->val);
     prev->next = (*elem)->next;
-    (*elem)->next = NULL;
+    tmp->next = NULL;
     return tmp;
+}
+
+void single_list_reverse(single_list_head_t *head)
+{
+    single_list_head_t tmp;
+    single_list_t *elem;
+    tmp.head = NULL;
+    while (!single_list_is_empty(head))
+    {
+        elem = single_list_delete(head, &head->head);
+        singel_list_insert_head(&tmp, elem);
+    }
+    head->head = tmp.head;
+}
+
+single_list_t *single_list_middle(single_list_head_t *head)
+{
+    single_list_t *s1, *s2;
+    single_list_t pseudo_head;
+    pseudo_head.next = head->head;
+    s1 = &pseudo_head;
+    s2 = &pseudo_head;
+    while (true)
+    {
+        if (!s2 || !s2->next)
+            return s1;
+        s1 = s1->next;
+        s2 = s2->next->next;
+    }
+    return NULL;
 }
 int main(int argc, char *argv[])
 {
@@ -96,13 +126,8 @@ int main(int argc, char *argv[])
     }
     head.head = NULL;
 
-    singel_list_insert_head(&head, &nodes[2]);
-    singel_list_insert_head(&head, &nodes[3]);
-    singel_list_insert_head(&head, &nodes[5]);
-    singel_list_insert_head(&head, &nodes[6]);
-    singel_list_insert_head(&head, &nodes[8]);
-    singel_list_insert_head(&head, &nodes[0]);
-    singel_list_insert_head(&head, &nodes[1]);
+    for (i = 9; i >= 0; i--)
+        singel_list_insert_head(&head, &nodes[i]);
 
     printf("init the list:\r\n");
     single_list_dump(&head);
@@ -116,6 +141,18 @@ int main(int argc, char *argv[])
     p = p->next;
     single_list_delete(&head, &p);
     printf("after delete the 3 elem:\r\n");
+    single_list_dump(&head);
+
+    p = single_list_middle(&head);
+    if (p != NULL)
+        printf("middle is %d\r\n", p->val);
+    else
+    {
+        printf("error!\r\n");
+    }
+
+    single_list_reverse(&head);
+    printf("after reverse \r\n");
     single_list_dump(&head);
 
     return 0;
