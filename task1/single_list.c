@@ -100,10 +100,9 @@ void single_list_reverse(single_list_head_t *head)
 single_list_t *single_list_middle(single_list_head_t *head)
 {
     single_list_t *s1, *s2;
-    single_list_t pseudo_head;
-    pseudo_head.next = head->head;
-    s1 = &pseudo_head;
-    s2 = &pseudo_head;
+
+    s1 = head->head;
+    s2 = head->head;
     while (true)
     {
         if (!s2 || !s2->next)
@@ -113,6 +112,24 @@ single_list_t *single_list_middle(single_list_head_t *head)
     }
     return NULL;
 }
+
+bool single_list_is_cyclic(single_list_head_t *head)
+{
+    single_list_t *s1, *s2;
+
+    s1 = head->head;
+    s2 = head->head;
+    while (s1 && s2)
+    {
+        s1 = s1->next;
+        s2 = s2->next ? s2->next->next : s2->next;
+
+        if (s1 == s2)
+            return true;
+    }
+    return false;
+}
+
 int main(int argc, char *argv[])
 {
     single_list_head_t head;
@@ -132,6 +149,8 @@ int main(int argc, char *argv[])
     printf("init the list:\r\n");
     single_list_dump(&head);
 
+    p = head.head;
+    single_list_delete(&head, &p);
     p = head.head;
     single_list_delete(&head, &p);
     printf("after delete head:\r\n");
@@ -155,5 +174,8 @@ int main(int argc, char *argv[])
     printf("after reverse \r\n");
     single_list_dump(&head);
 
+    printf("list is%s cyclic\r\n", single_list_is_cyclic(&head)?"":" not");
+    nodes[2].next = &nodes[8];
+    printf("list is%s cyclic\r\n", single_list_is_cyclic(&head)?"":" not");    
     return 0;
 }
