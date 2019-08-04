@@ -2,12 +2,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
-
-typedef enum
-{
-    TRUE,
-    FALSE
-} bool_t;
+#include <stdbool.h>
 
 /*
     实现一个支持动态扩容的数组
@@ -16,61 +11,61 @@ typedef enum
 
 typedef char dyn_array_t;       /* could be char ,short, int, long or stucture ... */
 
-bool_t dyn_array_create(dyn_array_t **p_dyn_array, int array_size);
-bool_t dyn_array_extend(dyn_array_t **p_dyn_array, int old_array_size, int new_array_size);
-bool_t dyn_array_destory(dyn_array_t *p_dyn_array);
-bool_t dyn_array_test(void);
+bool dyn_array_create(dyn_array_t **p_dyn_array, int array_size);
+bool dyn_array_extend(dyn_array_t **p_dyn_array, int old_array_size, int new_array_size);
+bool dyn_array_destory(dyn_array_t *p_dyn_array);
+bool dyn_array_test(void);
 
-bool_t dyn_array_create(dyn_array_t **p_dyn_array, int array_size)
+bool dyn_array_create(dyn_array_t **p_dyn_array, int array_size)
 {
     *p_dyn_array = (dyn_array_t *)malloc(array_size * sizeof(dyn_array_t));
     if (*p_dyn_array == NULL)
     {
         printf("Can't malloc the %d size of memory", array_size);
-        return FALSE;
+        return false;
     }
     memset(*p_dyn_array, 0, array_size * sizeof(dyn_array_t));
 
-    return TRUE;
+    return true;
 }
-bool_t dyn_array_extend(dyn_array_t **p_dyn_array, int old_array_size, int new_array_size)
+bool dyn_array_extend(dyn_array_t **p_dyn_array, int old_array_size, int new_array_size)
 {
     dyn_array_t *p_new;
     dyn_array_t **p_temp;
     int i;
 
     if (new_array_size <= old_array_size)
-        return TRUE;
+        return true;
 
     p_new = (dyn_array_t *)malloc(new_array_size * sizeof(dyn_array_t));
     if (p_new == NULL)
     {
         printf("Can't malloc the %d size of memory", new_array_size);
-        return FALSE;
+        return false;
     }
     memcpy(p_new, *p_dyn_array, old_array_size * sizeof(dyn_array_t));
     memset(&p_new[old_array_size],0, sizeof(dyn_array_t) * (new_array_size-old_array_size));
     p_temp = p_dyn_array;
     free(*p_temp);
     *p_dyn_array = p_new;
-    return TRUE;
+    return true;
 }
 
-bool_t dyn_array_destory(dyn_array_t *p_dyn_array)
+bool dyn_array_destory(dyn_array_t *p_dyn_array)
 {
     free(p_dyn_array);
-    return TRUE;
+    return true;
 }
 
-bool_t dyn_array_test(void)
+bool dyn_array_test(void)
 {
     dyn_array_t *my_dyn_array;
     int dyn_array_size = 8;
     int i;
 
-    if (dyn_array_create(&my_dyn_array, dyn_array_size) == FALSE)
+    if (dyn_array_create(&my_dyn_array, dyn_array_size) == false)
     {
-        return FALSE;
+        return false;
     }
 
     for (i = 0; i < dyn_array_size; i++)
@@ -80,9 +75,9 @@ bool_t dyn_array_test(void)
     }
     printf("\r\n");
 
-    if (dyn_array_extend(&my_dyn_array, dyn_array_size, dyn_array_size + 8) == FALSE)
+    if (dyn_array_extend(&my_dyn_array, dyn_array_size, dyn_array_size + 8) == false)
     {
-        return FALSE;
+        return false;
     }
 
     my_dyn_array[dyn_array_size] = 15;
@@ -94,7 +89,7 @@ bool_t dyn_array_test(void)
 
     dyn_array_destory(my_dyn_array);
 
-    return TRUE;
+    return true;
 }
 
 /*
@@ -109,23 +104,23 @@ typedef struct
     int *p;  /* point to array */
 } seq_array_t;
 
-bool_t seq_array_create(seq_array_t **p_seq_array, int len);
-bool_t seq_array_insert(seq_array_t *p_seq_array, int val);
-bool_t seq_array_delete(seq_array_t *p_seq_array, int index);
-bool_t seq_array_destory(seq_array_t *p_seq_array);
+bool seq_array_create(seq_array_t **p_seq_array, int len);
+bool seq_array_insert(seq_array_t *p_seq_array, int val);
+bool seq_array_delete(seq_array_t *p_seq_array, int index);
+bool seq_array_destory(seq_array_t *p_seq_array);
 void seq_array_printf(seq_array_t *p_seq_array);
-bool_t seq_array_test(void);
+bool seq_array_test(void);
 
-bool_t seq_array_create(seq_array_t **p_seq_array, int len)
+bool seq_array_create(seq_array_t **p_seq_array, int len)
 {
     seq_array_t *p;
     if (len < 0)
-        return FALSE;
+        return false;
     p = (seq_array_t *)malloc(sizeof(seq_array_t));
     if (p == NULL)
     {
         printf("can't malloc seq_array_t \r\n");
-        return FALSE;
+        return false;
     }
 
     p->len = len;
@@ -136,24 +131,24 @@ bool_t seq_array_create(seq_array_t **p_seq_array, int len)
     {
         printf("can't malloc %d size of memory \r\n", len * sizeof(int));
         free(p);
-        return FALSE;
+        return false;
     }
     memset(p->p, 0, len * sizeof(int));
     *p_seq_array = p;
-    return TRUE;
+    return true;
 }
 
-bool_t seq_array_insert(seq_array_t *p_seq_array, int val)
+bool seq_array_insert(seq_array_t *p_seq_array, int val)
 {
     int i, j;
     if (p_seq_array == NULL)
-        return FALSE;
+        return false;
     if (p_seq_array->p == NULL)
-        return FALSE;
+        return false;
     if (p_seq_array->len <= p_seq_array->pos)
     {
         printf("can't insert the value %d, the array is full\r\n", val);
-        return FALSE;
+        return false;
     }
     //add the value the array
     if (p_seq_array->pos == 0)
@@ -175,16 +170,16 @@ bool_t seq_array_insert(seq_array_t *p_seq_array, int val)
                 }
         }
     }
-    return TRUE;
+    return true;
 }
 
-bool_t seq_array_delete(seq_array_t *p_seq_array, int index)
+bool seq_array_delete(seq_array_t *p_seq_array, int index)
 {
     int i;
     if (p_seq_array == NULL)
-        return FALSE;
+        return false;
     if (p_seq_array->p == NULL)
-        return FALSE;
+        return false;
 
     if ((index < p_seq_array->pos) && (index >= 0))
     {
@@ -193,9 +188,9 @@ bool_t seq_array_delete(seq_array_t *p_seq_array, int index)
 
         p_seq_array->p[--p_seq_array->pos] = 0;
     }
-    return TRUE;
+    return true;
 }
-bool_t seq_array_destory(seq_array_t *p_seq_array)
+bool seq_array_destory(seq_array_t *p_seq_array)
 {
     if (p_seq_array != NULL)
     {
@@ -203,7 +198,7 @@ bool_t seq_array_destory(seq_array_t *p_seq_array)
             free(p_seq_array->p);
         free(p_seq_array);
     }
-    return TRUE;
+    return true;
 }
 void seq_array_printf(seq_array_t *p_seq_array)
 {
@@ -212,14 +207,14 @@ void seq_array_printf(seq_array_t *p_seq_array)
         printf("%02d:%-8d  ", i, p_seq_array->p[i]);
     printf("\r\n");
 }
-bool_t seq_array_test(void)
+bool seq_array_test(void)
 {
     seq_array_t *my_seq_array;
     int seq_array_len = 16;
     int i;
 
-    if (seq_array_create(&my_seq_array, seq_array_len) == FALSE)
-        return FALSE;
+    if (seq_array_create(&my_seq_array, seq_array_len) == false)
+        return false;
 
     for (i = 0; i < my_seq_array->len; i++)
         seq_array_insert(my_seq_array, rand());
@@ -235,7 +230,7 @@ bool_t seq_array_test(void)
 
     seq_array_destory(my_seq_array);
 
-    return TRUE;
+    return true;
 }
 
 /*
@@ -244,7 +239,7 @@ bool_t seq_array_test(void)
     merge array
  */
 int* merge_array(int *a, int size_a, int *b, int size_b);
-bool_t merge_array_test();
+bool merge_array_test();
 
 int* merge_array(int *a, int size_a, int *b, int size_b)
 {
@@ -264,7 +259,7 @@ int* merge_array(int *a, int size_a, int *b, int size_b)
 
     return c;
 }
-bool_t merge_array_test()
+bool merge_array_test()
 {
     seq_array_t *my_seq_array_a;
     seq_array_t *my_seq_array_b;
@@ -272,10 +267,10 @@ bool_t merge_array_test()
     int i;
     int seq_array_a_len = 9;
     int seq_array_b_len = 13;
-    if (seq_array_create(&my_seq_array_a, seq_array_a_len) == FALSE)
-        return FALSE;
-    if (seq_array_create(&my_seq_array_b, seq_array_b_len) == FALSE)
-        return FALSE;
+    if (seq_array_create(&my_seq_array_a, seq_array_a_len) == false)
+        return false;
+    if (seq_array_create(&my_seq_array_b, seq_array_b_len) == false)
+        return false;
 
     for (i = 0; i < my_seq_array_a->len; i++)
         seq_array_insert(my_seq_array_a, rand());
@@ -297,7 +292,7 @@ bool_t merge_array_test()
     seq_array_destory(my_seq_array_b);
     free(c);
 
-    return TRUE;
+    return true;
 }
 int main(int argc, char *argv[])
 {
