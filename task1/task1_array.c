@@ -14,14 +14,14 @@ typedef enum
     dynaic array 
  */
 
-typedef char dyn_array_t;
+typedef char dyn_array_t;       /* could be char ,short, int, long or stucture ... */
 
 bool_t dyn_array_create(dyn_array_t **p_dyn_array, int array_size);
 bool_t dyn_array_extend(dyn_array_t **p_dyn_array, int old_array_size, int new_array_size);
 bool_t dyn_array_destory(dyn_array_t *p_dyn_array);
 bool_t dyn_array_test(void);
 
-bool_t dyn_array_create(char **p_dyn_array, int array_size)
+bool_t dyn_array_create(dyn_array_t **p_dyn_array, int array_size)
 {
     *p_dyn_array = (dyn_array_t *)malloc(array_size * sizeof(dyn_array_t));
     if (*p_dyn_array == NULL)
@@ -49,10 +49,7 @@ bool_t dyn_array_extend(dyn_array_t **p_dyn_array, int old_array_size, int new_a
         return FALSE;
     }
     memcpy(p_new, *p_dyn_array, old_array_size * sizeof(dyn_array_t));
-
-    for (i = old_array_size; i < new_array_size; i++)
-        p_new[i] = 0;
-
+    memset(&p_new[old_array_size],0, sizeof(dyn_array_t) * (new_array_size-old_array_size));
     p_temp = p_dyn_array;
     free(*p_temp);
     *p_dyn_array = p_new;
