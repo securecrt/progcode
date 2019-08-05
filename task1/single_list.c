@@ -160,6 +160,7 @@ single_list_t *single_list_merge(single_list_t **a, single_list_t **b)
         else if(!s2)
         {
             s3->next = s1;
+            break;
         }
         if(s1->val <=s2->val)
         {
