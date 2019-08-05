@@ -25,16 +25,6 @@ struct ListNode
     struct ListNode *next;
 };
 
-void exchange_node(struct ListNode **a, struct ListNode **b)
-{
-    if (*b == NULL)
-        return;
-    struct ListNode *p = *b;
-    *b = p->next;
-    p->next = *a;
-    *a = p;
-}
-
 struct ListNode *single_list_merge(struct ListNode **a, struct ListNode **b)
 {
     struct ListNode c;
@@ -58,7 +48,6 @@ struct ListNode *single_list_merge(struct ListNode **a, struct ListNode **b)
         }
         if (s1->val <= s2->val)
         {
-            //exchange_node(&(s3->next), &s1);
             tmp = s1;
             s1 = s1->next;
             tmp->next = s3->next;
@@ -66,7 +55,6 @@ struct ListNode *single_list_merge(struct ListNode **a, struct ListNode **b)
         }
         else
         {
-            //exchange_node(&(s3->next), &s2);
             tmp = s2;
             s2 = s2->next;
             tmp->next = s3->next;
