@@ -12,7 +12,7 @@ typedef struct _single_list_t
     int val;
 } single_list_t;
 
-typedef struct _single_list_head_t
+typedef struct 
 {
     single_list_t *head;
 } single_list_head_t;
