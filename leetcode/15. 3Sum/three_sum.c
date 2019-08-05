@@ -39,27 +39,26 @@ A solution set is:
 #include <stdio.h>
 #include <math.h>
 
-
 /*
 https://www.cnblogs.com/tsingke/p/6194737.html
 C语言 产生标准高斯分布 随机数
  */
-#define PI 3.141592654 
-double gaussrand( )
+#define PI 3.141592654
+double gaussrand()
 {
     static double U, V;
     static int phase = 0;
     double Z;
 
-    if(phase == 0)
+    if (phase == 0)
     {
-         U = rand() / (RAND_MAX + 1.0);
-         V = rand() / (RAND_MAX + 1.0);
-         Z = sqrt(-2.0 * log(U))* sin(2.0 * PI * V);
+        U = rand() / (RAND_MAX + 1.0);
+        V = rand() / (RAND_MAX + 1.0);
+        Z = sqrt(-2.0 * log(U)) * sin(2.0 * PI * V);
     }
     else
     {
-         Z = sqrt(-2.0 * log(U)) * cos(2.0 * PI * V);
+        Z = sqrt(-2.0 * log(U)) * cos(2.0 * PI * V);
     }
 
     phase = 1 - phase;
@@ -128,6 +127,8 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
     {
         j = i;
         k = numsSize - 1;
+        if (nums[i] > 0)
+            break;
         if (nums[i] == nums[i + 1] && ((i + 1) < numsSize - 2))
             continue;
         while (j < k)
@@ -173,8 +174,8 @@ int main(int argc, char *argv[])
 
     //使用高斯随机函数 产生数据
     nums = malloc(numsSize * sizeof(int));
-    for (i=0;i< numsSize;i++ )
-        nums[i] = (int)(10*gaussrand());
+    for (i = 0; i < numsSize; i++)
+        nums[i] = (int)(10 * gaussrand());
 
     returnColumnsizes = NULL;
     result = threeSum(nums, numsSize, &returnSize, returnColumnsizes);
