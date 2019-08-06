@@ -65,47 +65,67 @@ double gaussrand()
     return Z;
 }
 
-void quickSort(int *nums, int left, int right)
+void swap(int *a, int *b)
 {
-    int i, j, pivot, temp;
-    if (left < right)
-    {
-        i = left;
-        j = right + 1;
-        pivot = nums[left];
-        do
-        {
-            do
-            {
-                i++;
-            } while (nums[i] < pivot);
-            do
-            {
-                j--;
-            } while (nums[j] > pivot);
-            if (i < j)
-            {
-                temp = nums[i];
-                nums[i] = nums[j];
-                nums[j] = temp;
-            }
-        } while (i < j);
-        temp = nums[left];
-        nums[left] = nums[j];
-        nums[j] = temp;
+    int temp;
 
-        quickSort(nums, left, j - 1);
-        quickSort(nums, j + 1, right);
+    temp = *a;
+    *a = *b;
+    *b = temp;
+
+    return;
+}
+void quicksort(int *array, int maxlen, int begin, int end)
+{
+    int i, j;
+
+    if (begin < end)
+    {
+        i = begin + 1; // 将array[begin]作为基准数，因此从array[begin+1]开始与基准数比较！
+        j = end;       // array[end]是数组的最后一位
+
+        while (i < j)
+        {
+            if (array[i] > array[begin]) // 如果比较的数组元素大于基准数，则交换位置。
+            {
+                swap(&array[i], &array[j]); // 交换两个数
+                j--;
+            }
+            else
+            {
+                i++; // 将数组向后移一位，继续与基准数比较。
+            }
+        }
+
+        /* 跳出while循环后，i = j。
+         * 此时数组被分割成两个部分  -->  array[begin+1] ~ array[i-1] < array[begin]
+         *                           -->  array[i+1] ~ array[end] > array[begin]
+         * 这个时候将数组array分成两个部分，再将array[i]与array[begin]进行比较，决定array[i]的位置。
+         * 最后将array[i]与array[begin]交换，进行两个分割部分的排序！以此类推，直到最后i = j不满足条件就退出！
+         */
+
+        if (array[i] >= array[begin]) // 这里必须要取等“>=”，否则数组元素由相同的值时，会出现错误！
+        {
+            i--;
+        }
+
+        swap(&array[begin], &array[i]); // 交换array[i]与array[begin]
+
+        quicksort(array, maxlen, begin, i);
+        quicksort(array, maxlen, j, end);
     }
 }
 
 void *re_alloc(void *p, int old_size, int new_size)
 {
-    if (p == NULL)
-        return malloc(new_size);
-
     void *p_new;
     p_new = (void *)malloc(new_size);
+
+    if (p_new == NULL)
+        return NULL;
+
+    if (p == NULL)
+        return p_new;
 
     memcpy(p_new, p, old_size);
     free(p);
@@ -116,38 +136,49 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
 {
     int i, j, k, sum;
     int **ret;
+    *returnSize = 0;
+    ret = NULL;
+    *returnColumnSizes = NULL;
     i = 0;
     j = 0;
     k = 0;
-    quickSort(nums, 0, numsSize - 1);
+    quicksort(nums, numsSize, 0, numsSize - 1);
+#if 0
+    for (i = 0; i < numsSize; i++)
+        printf("%d ", nums[i]);
+    printf("\r\n");
+#endif
     if (numsSize < 3)
         return NULL;
 
     for (i = 0; i < numsSize - 2; i++)
     {
-        j = i + 1;
-        k = numsSize - 1;
+
         if (nums[i] > 0)
             break;
-        if (nums[i] == nums[i + 1] && ((i + 1) < numsSize - 2))
+        if (i > 1 && nums[i] == nums[i - 1])
             continue;
+        j = i + 1;
+        k = numsSize - 1;
         while (j < k)
         {
             sum = nums[i] + nums[j] + nums[k];
             if (sum == 0)
             {
-                returnColumnSizes = (int **)re_alloc(returnColumnSizes, (*returnSize) * sizeof(int *), (*returnSize + 1) * sizeof(int *));
-
-                returnColumnSizes[*returnSize] = (int *)malloc(3 * sizeof(int));
-                returnColumnSizes[*returnSize][0] = nums[i];
-                returnColumnSizes[*returnSize][1] = nums[j];
-                returnColumnSizes[*returnSize][2] = nums[k];
+                *returnColumnSizes = (int *)re_alloc((*returnColumnSizes), (*returnSize) * sizeof(int), (*returnSize + 1) * sizeof(int));
+                (*returnColumnSizes)[*returnSize] = 3;
+                ret = (int**)re_alloc(ret,(*returnSize) * sizeof(int **), (*returnSize + 1) * sizeof(int**));
+                ret[*returnSize] = (int *)malloc(3 * sizeof(int));
+                ret[*returnSize][0] = nums[i];
+                ret[*returnSize][1] = nums[j];
+                ret[*returnSize][2] = nums[k];
                 *returnSize = *returnSize + 1;
-                j++, k--;
-                while (j < k && nums[j] == nums[j - 1])
+
+                while (j < k && nums[j] == nums[j + 1])
                     j++;
                 while (j < k && nums[k] == nums[k - 1])
                     k--;
+                j++, k--;
             }
             else if (sum > 0)
                 k--;
@@ -155,30 +186,33 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
                 j++;
         }
     }
-    ret = returnColumnSizes;
+    
     return ret;
 }
 
+#define USE_RAND_NUM 1
+
 int main(int argc, char *argv[])
 {
-    //int nums[] = {-1, 0, 1, 2, -1, -4};
-    //int numsSize = 6;
 
-    int *nums;
-    int numsSize = 10240;
     int **result;
     int returnSize = 0;
-    int **returnColumnsizes;
-
+    int *returnColumnsizes;
     int i;
 
-    //使用高斯随机函数 产生数据
-    nums = malloc(numsSize * sizeof(int));
+#if USE_RAND_NUM
+    int nums[] = {-1, 0, 1, 2, -1, -4};
+    int numsSize = 6;
+#else
+    int *nums;
+    int numsSize = 10240;
+    使用高斯随机函数 产生数据
+        nums = malloc(numsSize * sizeof(int));
     for (i = 0; i < numsSize; i++)
         nums[i] = (int)(10 * gaussrand());
-
+#endif
     returnColumnsizes = NULL;
-    result = threeSum(nums, numsSize, &returnSize, returnColumnsizes);
+    result = threeSum(nums, numsSize, &returnSize, &returnColumnsizes);
     if (result)
     {
         for (i = 0; i < returnSize; i++)
@@ -189,7 +223,8 @@ int main(int argc, char *argv[])
 
         free(result);
     }
+#if !USE_RAND_NUM
     free(nums);
-
+#endif
     return 0;
 }
