@@ -116,6 +116,19 @@ void quicksort(int *array, int maxlen, int begin, int end)
     }
 }
 
+void bubblesort(int *array, int len)
+{
+    int i, j, tmp;
+    for (i = 0; i < len; i++)
+        for (j = i; j < len; j++)
+            if (array[j] < array[i])
+            {
+                tmp = array[i];
+                array[i] = array[j];
+                array[j] = tmp;
+            }
+}
+
 void *re_alloc(void *p, int old_size, int new_size)
 {
     void *p_new;
@@ -143,6 +156,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
     j = 0;
     k = 0;
     quicksort(nums, numsSize, 0, numsSize - 1);
+    //bubblesort(nums, numsSize);
 #if 0
     for (i = 0; i < numsSize; i++)
         printf("%d ", nums[i]);
@@ -167,7 +181,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
             {
                 *returnColumnSizes = (int *)re_alloc((*returnColumnSizes), (*returnSize) * sizeof(int), (*returnSize + 1) * sizeof(int));
                 (*returnColumnSizes)[*returnSize] = 3;
-                ret = (int**)re_alloc(ret,(*returnSize) * sizeof(int **), (*returnSize + 1) * sizeof(int**));
+                ret = (int **)re_alloc(ret, (*returnSize) * sizeof(int **), (*returnSize + 1) * sizeof(int **));
                 ret[*returnSize] = (int *)malloc(3 * sizeof(int));
                 ret[*returnSize][0] = nums[i];
                 ret[*returnSize][1] = nums[j];
@@ -186,7 +200,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
                 j++;
         }
     }
-    
+
     return ret;
 }
 
@@ -204,7 +218,7 @@ int main(int argc, char *argv[])
     //int nums[] = {-1, 0, 1, 2, -1, -4};
     //int numsSize = 6;
     int nums[] = {0,0,0,0};
-    int numsSize = 4;    
+    int numsSize = 4;
 #else
     int *nums;
     int numsSize = 10240;
@@ -222,7 +236,7 @@ int main(int argc, char *argv[])
             printf("%d,%d,%d \r\n", result[i][0], result[i][1], result[i][2]);
             free(result[i]);
         }
-
+        printf("total %d results", returnSize);
         free(result);
     }
 #if !USE_RAND_NUM
