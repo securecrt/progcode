@@ -125,7 +125,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
 
     for (i = 0; i < numsSize - 2; i++)
     {
-        j = i;
+        j = i + 1;
         k = numsSize - 1;
         if (nums[i] > 0)
             break;
