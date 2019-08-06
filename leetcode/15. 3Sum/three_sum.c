@@ -156,7 +156,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
 
         if (nums[i] > 0)
             break;
-        if (i > 1 && nums[i] == nums[i - 1])
+        if (i >= 1 && nums[i] == nums[i - 1])
             continue;
         j = i + 1;
         k = numsSize - 1;
@@ -201,8 +201,10 @@ int main(int argc, char *argv[])
     int i;
 
 #if USE_RAND_NUM
-    int nums[] = {-1, 0, 1, 2, -1, -4};
-    int numsSize = 6;
+    //int nums[] = {-1, 0, 1, 2, -1, -4};
+    //int numsSize = 6;
+    int nums[] = {0,0,0,0};
+    int numsSize = 4;    
 #else
     int *nums;
     int numsSize = 10240;
