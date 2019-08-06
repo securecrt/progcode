@@ -128,23 +128,6 @@ void bubblesort(int *array, int len)
                 array[j] = tmp;
             }
 }
-
-void *re_alloc(void *p, int old_size, int new_size)
-{
-    void *p_new;
-    p_new = (void *)malloc(new_size);
-
-    if (p_new == NULL)
-        return NULL;
-
-    if (p == NULL)
-        return p_new;
-
-    memcpy(p_new, p, old_size);
-    free(p);
-    return p_new;
-}
-
 int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes)
 {
     int i, j, k, sum;
@@ -179,9 +162,9 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
             sum = nums[i] + nums[j] + nums[k];
             if (sum == 0)
             {
-                *returnColumnSizes = (int *)re_alloc((*returnColumnSizes), (*returnSize) * sizeof(int), (*returnSize + 1) * sizeof(int));
+                *returnColumnSizes = (int *)realloc((*returnColumnSizes), (*returnSize + 1) * sizeof(int));
                 (*returnColumnSizes)[*returnSize] = 3;
-                ret = (int **)re_alloc(ret, (*returnSize) * sizeof(int **), (*returnSize + 1) * sizeof(int **));
+                ret = (int **)realloc(ret,  (*returnSize + 1) * sizeof(int **));
                 ret[*returnSize] = (int *)malloc(3 * sizeof(int));
                 ret[*returnSize][0] = nums[i];
                 ret[*returnSize][1] = nums[j];
@@ -214,15 +197,15 @@ int main(int argc, char *argv[])
     int *returnColumnsizes;
     int i;
 
-#if USE_RAND_NUM
-    //int nums[] = {-1, 0, 1, 2, -1, -4};
-    //int numsSize = 6;
-    int nums[] = {0,0,0,0};
-    int numsSize = 4;
+#if !USE_RAND_NUM
+    int nums[] = {-1, 0, 1, 2, -1, -4};
+    int numsSize = 6;
+    //int nums[] = {0,0,0,0};
+    //int numsSize = 4;
 #else
     int *nums;
     int numsSize = 10240;
-    使用高斯随机函数 产生数据
+    //使用高斯随机函数 产生数据
         nums = malloc(numsSize * sizeof(int));
     for (i = 0; i < numsSize; i++)
         nums[i] = (int)(10 * gaussrand());
@@ -239,7 +222,7 @@ int main(int argc, char *argv[])
         printf("total %d results", returnSize);
         free(result);
     }
-#if !USE_RAND_NUM
+#if USE_RAND_NUM
     free(nums);
 #endif
     return 0;
