@@ -132,19 +132,16 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
 {
     int i, j, k, sum;
     int **ret;
+    int pre_alloc_size = 2;
     *returnSize = 0;
     ret = NULL;
     *returnColumnSizes = NULL;
+    ret = (int **)malloc(pre_alloc_size * sizeof(int **));
+
     i = 0;
     j = 0;
     k = 0;
     quicksort(nums, numsSize, 0, numsSize - 1);
-    //bubblesort(nums, numsSize);
-#if 0
-    for (i = 0; i < numsSize; i++)
-        printf("%d ", nums[i]);
-    printf("\r\n");
-#endif
     if (numsSize < 3)
         return NULL;
 
@@ -162,9 +159,6 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
             sum = nums[i] + nums[j] + nums[k];
             if (sum == 0)
             {
-                *returnColumnSizes = (int *)realloc((*returnColumnSizes), (*returnSize + 1) * sizeof(int));
-                (*returnColumnSizes)[*returnSize] = 3;
-                ret = (int **)realloc(ret,  (*returnSize + 1) * sizeof(int **));
                 ret[*returnSize] = (int *)malloc(3 * sizeof(int));
                 ret[*returnSize][0] = nums[i];
                 ret[*returnSize][1] = nums[j];
@@ -181,9 +175,16 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
                 k--;
             else
                 j++;
+            if ((*returnSize) == pre_alloc_size)
+            {
+                pre_alloc_size = pre_alloc_size * 2;
+                ret = (int **)realloc(ret, pre_alloc_size * sizeof(int **));
+            }
         }
     }
-
+    *returnColumnSizes = (int *)malloc((*returnSize) * sizeof(int));
+    for (i = 0; i < (*returnSize); i++)
+        (*returnColumnSizes)[i] = 3;
     return ret;
 }
 
@@ -206,7 +207,7 @@ int main(int argc, char *argv[])
     int *nums;
     int numsSize = 10240;
     //使用高斯随机函数 产生数据
-        nums = malloc(numsSize * sizeof(int));
+    nums = malloc(numsSize * sizeof(int));
     for (i = 0; i < numsSize; i++)
         nums[i] = (int)(10 * gaussrand());
 #endif
