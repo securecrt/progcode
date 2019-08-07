@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 
     link_list_stack_t *mystack;
     int stack_size = 16;
-    int item;
+    uint item;
     int i;
     mystack = create_stack();
 
