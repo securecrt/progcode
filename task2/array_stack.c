@@ -13,13 +13,13 @@ isEmpty: Returns true if stack is empty, else false.
 #include <stdbool.h>
 #include <stdlib.h>
 
-typedef unsigned int uint;
+typedef unsigned int _VAL_T;
 typedef struct
 {
 
     int top;
-    uint capacity;
-    uint *array;
+    int capacity;
+    _VAL_T *array;
 
 } array_stack_t;
 
@@ -28,7 +28,7 @@ bool is_empty(array_stack_t *stack)
     return (stack->top == -1) ? true : false;
 }
 
-bool pop(array_stack_t *stack, uint *item)
+bool pop(array_stack_t *stack, _VAL_T *item)
 {
     if (stack == NULL)
         return false;
@@ -40,7 +40,7 @@ bool pop(array_stack_t *stack, uint *item)
     return true;
 }
 
-bool push(array_stack_t *stack, uint item)
+bool push(array_stack_t *stack, _VAL_T item)
 {
     if (stack == NULL)
         return false;
@@ -55,7 +55,7 @@ bool is_full(array_stack_t *stack)
     return (stack->top == stack->capacity - 1) ? true : false;
 }
 
-bool peek(array_stack_t *stack, uint *item)
+bool peek(array_stack_t *stack, _VAL_T *item)
 {
     if (stack == NULL)
         return false;
@@ -66,7 +66,7 @@ bool peek(array_stack_t *stack, uint *item)
     return true;
 }
 
-array_stack_t *create_stack(uint capacity)
+array_stack_t *create_stack(int capacity)
 {
 
     array_stack_t *stack;
@@ -76,7 +76,7 @@ array_stack_t *create_stack(uint capacity)
 
     stack->capacity = capacity;
     stack->top = -1;
-    stack->array = (uint *)malloc(stack->capacity * sizeof(uint));
+    stack->array = (_VAL_T *)malloc(stack->capacity * sizeof(_VAL_T));
 
     if (stack->array == NULL)
     {
@@ -99,8 +99,8 @@ int main(int argc, char *argv[])
 
     array_stack_t *mystack;
     int stack_size = 16;
-    uint item;
-    uint i;
+    _VAL_T item;
+    int i;
     mystack = create_stack(stack_size);
 
     if (mystack == NULL)
