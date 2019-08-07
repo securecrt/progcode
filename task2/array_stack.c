@@ -99,8 +99,8 @@ int main(int argc, char *argv[])
 
     array_stack_t *mystack;
     int stack_size = 16;
-    int item;
-    int i;
+    uint item;
+    uint i;
     mystack = create_stack(stack_size);
 
     if (mystack == NULL)
