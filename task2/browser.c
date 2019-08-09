@@ -52,6 +52,8 @@ void clear(link_list_stack_t *stack)
     while (pnode != NULL)
     {
         stack->next = pnode->next;
+        if (pnode->val != NULL)
+            free(pnode->val);
         free(pnode);
         pnode = stack->next;
     }
@@ -105,20 +107,6 @@ link_list_stack_t *create_stack(void)
     stack->next = NULL;
     return stack;
 }
-void destory_stack(link_list_stack_t *stack)
-{
-    list_node_t *pnode;
-    if (stack == NULL)
-        return;
-
-    while (stack->next != NULL)
-    {
-        pnode = stack->next;
-        stack->next = pnode->next;
-        free(pnode);
-    }
-    free(stack);
-}
 
 typedef struct
 {
@@ -159,8 +147,8 @@ void destroy_browser(simple_browser_t *pbrowser)
 {
     if (pbrowser != NULL)
     {
-        destory_stack(pbrowser->fwd_stack);
-        destory_stack(pbrowser->back_stack);
+        clear(pbrowser->fwd_stack);
+        clear(pbrowser->back_stack);
         free(pbrowser);
     }
 }
@@ -236,4 +224,3 @@ int main(int argc, char *argv[])
     destroy_browser(pbrowser);
     return 0;
 }
-
